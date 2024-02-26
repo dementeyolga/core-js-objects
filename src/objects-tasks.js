@@ -160,8 +160,28 @@ function makeWord(lettersObject) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  let change = 0;
+  const ticketPrice = 25;
+
+  let result = true;
+
+  Object.values(queue).forEach((value) => {
+    if (value / ticketPrice === 1) {
+      change += value;
+    } else {
+      const diff = value - ticketPrice;
+      if (change >= diff) {
+        change += value - diff;
+      } else {
+        result = false;
+      }
+    }
+
+    return value;
+  });
+
+  return result;
 }
 
 /**
@@ -177,8 +197,14 @@ function sellTickets(/* queue */) {
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  return {
+    width,
+    height,
+    getArea() {
+      return this.width * this.height;
+    },
+  };
 }
 
 /**
@@ -191,8 +217,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 /**
@@ -206,8 +232,10 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  const obj = JSON.parse(json);
+
+  return Object.setPrototypeOf(obj, proto);
 }
 
 /**
@@ -236,8 +264,18 @@ function fromJSON(/* proto, json */) {
  *      { country: 'Russia',  city: 'Saint Petersburg' }
  *    ]
  */
-function sortCitiesArray(/* arr */) {
-  throw new Error('Not implemented');
+function sortCitiesArray(arr) {
+  const result = [...arr];
+
+  result.sort((a, b) => {
+    if (a.country.localeCompare(b.country) === 0) {
+      return a.city.localeCompare(b.city);
+    }
+
+    return a.country.localeCompare(b.country);
+  });
+
+  return result;
 }
 
 /**
@@ -270,8 +308,23 @@ function sortCitiesArray(/* arr */) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  const result = new Map();
+
+  array.forEach((item) => {
+    const key = keySelector(item);
+    if (result.has(key)) {
+      return;
+    }
+
+    const values = array
+      .filter((i) => keySelector(i) === key)
+      .map(valueSelector);
+
+    result.set(key, values);
+  });
+
+  return result;
 }
 
 /**
